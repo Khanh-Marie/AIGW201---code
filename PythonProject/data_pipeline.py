@@ -31,10 +31,10 @@ class DataAnalysisPipeline:
         if self.df is None:
             self.load_titanic_data()
 
-        # Fix: Handle case sensitivity in gender values
+        #Fix: Handle case sensitivity in gender values
         survival_by_sex = self.df.groupby('Sex')['Survived'].mean()
 
-        # Convert to lowercase keys for consistency
+        #Convert to lowercase keys for consistency
         survival_dict = {}
         for gender in survival_by_sex.index:
             survival_dict[gender.lower()] = survival_by_sex[gender]
@@ -45,7 +45,7 @@ class DataAnalysisPipeline:
             "age_std": self.df['Age'].std()
         }
 
-        # Calculate overall survival rate
+        #Calculate overall survival rate
         overall_survival = self.df['Survived'].mean()
 
         self.analysis_results["visualizations"] = {
@@ -53,4 +53,5 @@ class DataAnalysisPipeline:
             "age_stats": age_stats,
             "overall_survival": overall_survival
         }
+
         return self.analysis_results["visualizations"]
