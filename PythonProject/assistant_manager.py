@@ -10,7 +10,7 @@ class AssistantManager:
         self.ml_model = SurvivalPredictor()
         self.lm_client = LMStudioClient()
 
-        # Load and train on startup
+        #Load and train on startup
         print("Loading Titanic dataset...")
         self.data_pipeline.load_titanic_data()
         print("Training ML model...")
@@ -34,7 +34,7 @@ class AssistantManager:
             analysis = self.data_pipeline.basic_analysis()
             visualizations = self.data_pipeline.generate_visualizations()
 
-            # Safely access gender survival rates
+            #Safely access gender survival rates
             survival_rates = visualizations['survival_by_sex']
             female_rate = survival_rates.get('female', survival_rates.get('Female', 'N/A'))
             male_rate = survival_rates.get('male', survival_rates.get('Male', 'N/A'))
@@ -64,10 +64,10 @@ The data shows significant differences in survival rates based on gender and cla
 
     def handle_prediction(self, user_message):
         try:
-            # Extract passenger information from message
+            #Extract passenger information from message
             passenger_data = {}
 
-            # Extract class
+            #Extract class
             class_match = re.search(r'(\d)(?:st|nd|rd|th)\s*class', user_message.lower())
             if class_match:
                 passenger_data['Pclass'] = int(class_match.group(1))
@@ -76,18 +76,18 @@ The data shows significant differences in survival rates based on gender and cla
                 if class_match:
                     passenger_data['Pclass'] = int(class_match.group(1))
 
-            # Extract age
+            #Extract age
             age_match = re.search(r'(\d+)\s*year', user_message.lower())
             if age_match:
                 passenger_data['Age'] = int(age_match.group(1))
 
-            # Extract gender
+            #Extract gender
             if 'female' in user_message.lower():
                 passenger_data['Sex'] = 'female'
             elif 'male' in user_message.lower():
                 passenger_data['Sex'] = 'male'
 
-            # Extract fare if mentioned
+            #Extract fare if mentioned
             fare_match = re.search(r'fare\s*[\$]?\s*(\d+)', user_message.lower())
             if fare_match:
                 passenger_data['Fare'] = float(fare_match.group(1))
