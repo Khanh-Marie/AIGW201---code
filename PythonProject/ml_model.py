@@ -15,34 +15,34 @@ class SurvivalPredictor:
         self.feature_columns = ['Pclass', 'Sex', 'Age', 'SibSp', 'Parch', 'Fare', 'Embarked', 'FamilySize', 'IsAlone']
 
     def preprocess_data(self, df, is_training=True):
-        # Create a copy to avoid modifying original
+        #Create a copy to avoid modifying original
         df_processed = df.copy()
 
-        # Handle missing values
+        #Handle missing values
         df_processed['Age'] = df_processed['Age'].fillna(df_processed['Age'].median())
         df_processed['Embarked'] = df_processed['Embarked'].fillna('S')
         df_processed['Fare'] = df_processed['Fare'].fillna(df_processed['Fare'].median())
 
-        # Feature engineering
+        #Feature engineering
         df_processed['FamilySize'] = df_processed['SibSp'] + df_processed['Parch'] + 1
         df_processed['IsAlone'] = (df_processed['FamilySize'] == 1).astype(int)
 
-        # Encode categorical variables
+        #Encode categorical variables
         categorical_cols = ['Sex', 'Embarked']
         for col in categorical_cols:
             if col not in self.label_encoders:
                 self.label_encoders[col] = LabelEncoder()
                 if is_training:
-                    # Fit on training data
+                    #Fit on training data
                     df_processed[col] = self.label_encoders[col].fit_transform(df_processed[col].astype(str))
                 else:
-                    # For prediction, use existing encoder
+                    #For prediction, use existing encoder
                     df_processed[col] = self.label_encoders[col].transform(df_processed[col].astype(str))
             else:
-                # Use existing encoder
+                #Use existing encoder
                 df_processed[col] = self.label_encoders[col].transform(df_processed[col].astype(str))
 
-        # Select features
+        #Select features
         X = df_processed[self.feature_columns]
 
         if is_training and 'Survived' in df_processed.columns:
@@ -74,7 +74,7 @@ class SurvivalPredictor:
             return {"error": "Model not trained yet"}
 
         try:
-            # Ensure all required features are present
+            #Ensure all required features are present
             default_passenger = {
                 'Pclass': 2,
                 'Sex': 'male',
@@ -85,7 +85,7 @@ class SurvivalPredictor:
                 'Embarked': 'S'
             }
 
-            # Update with provided data
+            #Update with provided data
             for key in passenger_data:
                 if key in default_passenger:
                     default_passenger[key] = passenger_data[key]
@@ -104,4 +104,5 @@ class SurvivalPredictor:
                 "passenger_info": default_passenger
             }
         except Exception as e:
+
             return {"error": f"Prediction failed: {str(e)}"}
